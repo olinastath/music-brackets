@@ -1,0 +1,34 @@
+{
+    "extends": "eslint:recommended",
+    "rules": {
+        "quotes": ["error", "single"],
+        "max-len": [2, 140, 8],
+        "eol-last": ["error", "always"],
+        "prefer-const": ["error", {
+            "destructuring": "any",
+            "ignoreReadBeforeAssign": false
+        }],
+        "no-multi-spaces": "error",
+        "no-multi-str": "error",
+        "no-unused-vars": "error",
+        "no-use-before-define": "error",
+        "indent": ["error", "tab", { "MemberExpression": 1 }],
+		"camelcase": "error",
+		"comma-dangle": ["error", "never"],
+		"comma-spacing": "error",
+		"comma-style": ["error", "last"],
+		"implicit-arrow-linebreak": ["error", "beside"],
+		"lines-between-class-members": ["error", "always"],
+		"no-var": "error",
+        "no-multiple-empty-lines": ["error", { "max": 2}],
+        "semi": ["error", "always", { "omitLastInOneLineBlock": true}]
+    },
+    "parserOptions": {
+        "ecmaVersion": 2017
+    },
+    "env": {
+        "es6": true,
+        "node": true,
+        "browser": true
+    }
+}

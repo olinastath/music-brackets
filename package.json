@@ -1,0 +1,29 @@
+{
+  "name": "music-brackets",
+  "version": "1.0.0",
+  "description": "A tournament bracket maker with Spotify integration that enables you to create brackets based on albums, artist discographies, or playlists.",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "lint": "eslint --ignore-path .gitignore ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/olinastath/music-brackets.git"
+  },
+  "author": "Olina Stathopoulou",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/olinastath/music-brackets/issues"
+  },
+  "homepage": "https://github.com/olinastath/music-brackets#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "express-handlebars": "^6.0.6",
+    "hbs": "^4.2.0",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.17.0"
+  }
+}
