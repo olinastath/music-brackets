@@ -24,7 +24,9 @@
         "semi": ["error", "always", { "omitLastInOneLineBlock": true}]
     },
     "parserOptions": {
-        "ecmaVersion": 2017
+        "ecmaVersion": 2017,
+        "sourceType": "module",
+        "allowImportExportEverywhere": true
     },
     "env": {
         "es6": true,
