@@ -6,19 +6,16 @@ const fs = require('fs');
 const Album = require('./models/Album');
 const config = fs.existsSync('config.js') ? require('./config') : process.env;
 
+const sortingUtils = require('./utils/sortingUtils');
+const spotifyConstants = require('./constants/spotifyConstants');
+
 const clientId = config.clientId; // Your client id
 const clientSecret = config.clientSecret; // Your secret
 let accessToken;
 
-const apiEndpoints = {
-	albumSearchByAlbum: 'https://api.spotify.com/v1/search?type=album&q=album:',
-	albumSearchByArtist: 'https://api.spotify.com/v1/search?type=album&q=artist:',
-	albumDetails: 'https://api.spotify.com/v1/albums/'
-};
-
 const app = express();
 
-const authOptions = {
+let authOptions = {
 	url: 'https://accounts.spotify.com/api/token',
 	headers: {
 		'Authorization': 'Basic ' + (new Buffer.from(clientId + ':' + clientSecret).toString('base64'))
@@ -36,7 +33,7 @@ const authOptions = {
  */
 function getSpotifyAccessToken() {
 	return new Promise(resolve => {
-		request.post(authOptions, function(error, response, body) {
+		request.post(authOptions, function (error, response, body) {
 			if (!error && response.statusCode === 200) {
 				// use the access token to access the Spotify Web API
 				accessToken = body.access_token;
@@ -51,12 +48,13 @@ app.use(session({
 	secret: Buffer.from(clientId + ':' + clientSecret).toString('base64'),
 	resave: false,
 	key: 'express.sid',
-	saveUninitialized: false}))
+	saveUninitialized: false
+}))
 	.use(express.static(__dirname + '/public'));
 
-const hbs = expresshbs.create({ 
-	extname: 'hbs', 
-	defaultLayout: 'main', 
+const hbs = expresshbs.create({
+	extname: 'hbs',
+	defaultLayout: 'main',
 	layoutsDir: __dirname + '/views/layouts/',
 	partialsDir: __dirname + '/views/partials/'
 });
@@ -64,11 +62,11 @@ app.engine('hbs', hbs.engine);
 app.set('views', './views/layouts');
 app.set('view engine', 'hbs');
 
-hbs.handlebars.registerHelper('join', function(values, separator) {
+hbs.handlebars.registerHelper('join', function (values, separator) {
 	return values.join(separator);
 });
 
-hbs.handlebars.registerHelper('joinArtistNames', function(values, separator) {
+hbs.handlebars.registerHelper('joinArtistNames', function (values, separator) {
 	const arr = [];
 	for (let i = 0; i < values.length; i++) {
 		arr.push(values[i].name);
@@ -87,7 +85,7 @@ app.get('/refresh_token', function (req, res) {
 	// requesting access token from refresh token
 	const refreshToken = req.query.refresh_token;
 	console.log(refreshToken);
-	const authOptions = {
+	authOptions = {
 		url: 'https://accounts.spotify.com/api/token',
 		headers: {
 			Authorization: 'Basic ' + Buffer.from(clientId + ':' + clientSecret).toString('base64')
@@ -120,18 +118,22 @@ app.get('/refresh_token', function (req, res) {
 app.get('/search/album', (req, res) => {
 	if (!accessToken) getSpotifyAccessToken();
 	const options = {
-		url: apiEndpoints.albumSearchByAlbum + 'melodrama',
+		url: spotifyConstants.apiEndpoints.albumSearchByAlbum + 'melodrama',
 		headers: {
 			'Authorization': 'Bearer ' + accessToken
 		},
 		json: true
 	};
-	request.get(options, function(error, response, body) {
+	request.get(options, function (error, response, body) {
 		const albums = body.albums.items.map(album => new Album(album));
-		res.render('search-response', {albums: albums});
+		sortingUtils.sortAlbumsByArtistPopularity(albums, accessToken).then(result => {
+			console.log(result);
+			res.render('search-response', { albums: result });
+		});
+		
 	});
 
-	
+
 });
 
 /**
@@ -140,18 +142,18 @@ app.get('/search/album', (req, res) => {
 app.get('/album/:id', (req, res) => {
 	if (!accessToken) getSpotifyAccessToken();
 	const options = {
-		url: apiEndpoints.albumDetails + req.params.id,
+		url: spotifyConstants.apiEndpoints.albumDetails + req.params.id,
 		headers: {
 			'Authorization': 'Bearer ' + accessToken
 		},
 		json: true
 	};
-	request.get(options, function(error, response, body) {
+	request.get(options, function (error, response, body) {
 		const album = new Album(body);
-		res.render('album-details', {album: album});
+		res.render('album-details', { album: album });
 	});
 
-	
+
 });
 
 app.post('/generate', () => {

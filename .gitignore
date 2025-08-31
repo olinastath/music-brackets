@@ -1,3 +1,5 @@
 node_modules
 config.js
 docs.md
+package-lock.json
+*/.DS_STORE
