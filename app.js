@@ -7,6 +7,7 @@ const Album = require('./models/Album');
 const config = fs.existsSync('config.js') ? require('./config') : process.env;
 
 const sortingUtils = require('./utils/sortingUtils');
+const filteringUtils = require('./utils/filteringUtils');
 const spotifyConstants = require('./constants/spotifyConstants');
 
 const clientId = config.clientId; // Your client id
@@ -50,7 +51,8 @@ app.use(session({
 	key: 'express.sid',
 	saveUninitialized: false
 }))
-	.use(express.static(__dirname + '/public'));
+	.use(express.static(__dirname + '/public'))
+	.use(express.json());
 
 const hbs = expresshbs.create({
 	extname: 'hbs',
@@ -115,19 +117,20 @@ app.get('/refresh_token', function (req, res) {
 /**
  * Search by album
  */
-app.get('/search/album', (req, res) => {
+app.get('/search', (req, res) => {
+	const album = req.query.album;
 	if (!accessToken) getSpotifyAccessToken();
 	const options = {
-		url: spotifyConstants.apiEndpoints.albumSearchByAlbum + 'melodrama',
+		url: spotifyConstants.apiEndpoints.albumSearchByAlbum + album,
 		headers: {
 			'Authorization': 'Bearer ' + accessToken
 		},
 		json: true
 	};
 	request.get(options, function (error, response, body) {
-		const albums = body.albums.items.map(album => new Album(album));
+		let albums = new Map(body.albums.items.map(album => [album.id, new Album(album)]));
+		albums = filteringUtils.filterUniqueAlbums(albums);
 		sortingUtils.sortAlbumsByArtistPopularity(albums, accessToken).then(result => {
-			console.log(result);
 			res.render('search-response', { albums: result });
 		});
 		

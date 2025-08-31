@@ -4,7 +4,7 @@ const spotifyConstants = require('../constants/spotifyConstants');
 
 function getArtistDetails(album, accessToken) {
 	const options = {
-		url: spotifyConstants.apiEndpoints.artistDetailsBaseApi + album.mainArtist.id,
+		url: spotifyConstants.apiEndpoints.artistDetails + album.mainArtist.id,
 		headers: {
 			'Authorization': 'Bearer ' + accessToken
 		},

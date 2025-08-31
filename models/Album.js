@@ -6,7 +6,7 @@ class Album {
 		this.id = spotifyAlbum.id;
 		this.name = spotifyAlbum.name;
 		this.releaseDate = spotifyAlbum.release_date;
-		this.releaseYear = this.releaseDate.split('-')[0];
+		this.releaseYear = spotifyAlbum.release_date.split('-')[0];
 		this.totalTracks = spotifyAlbum.total_tracks;
 		this.type = spotifyAlbum.type;
 		this.artists = spotifyAlbum.artists.map(a => new Artist(a));

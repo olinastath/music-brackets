@@ -13,8 +13,8 @@ const apiEndpoints = {
 	albumSearchByAlbum: `${searchBaseApi}?${albumType}&${marketQuery}&${albumQuery}`,
 	albumSearchByArtist: `${searchBaseApi}?${albumType}&${marketQuery}&${artistQuery}`,
 	artistSearch: `${searchBaseApi}?${artistType}&${marketQuery}`,
-	albumDetailsBaseApi: albumDetailsBaseApi,
-	artistDetailsBaseApi: artistDetailsBaseApi
+	albumDetails: albumDetailsBaseApi,
+	artistDetails: artistDetailsBaseApi
 };
 
 module.exports = {
