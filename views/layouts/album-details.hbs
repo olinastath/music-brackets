@@ -1,0 +1,17 @@
+<div class="album-details-container--wrapper">
+	<div class="album-details-container" id="album-details-container--artwork">
+		<img src={{album.artwork.url}} />
+		<h1>{{album.name}}</h1>
+		<h2>by {{joinArtistNames album.artists ", "}}</h2>
+	</div>
+	<div class="album-details-container" id="album-details-container--tracklist">
+		<h2>Tracklist</h2>
+		<ol>
+		{{#each album.tracks}}
+			<li id="{{id}}">{{name}}</li>
+		{{/each}}
+		</ol>
+
+		<button>Generate bracket</button>
+	</div>
+</div>
