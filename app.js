@@ -4,6 +4,7 @@ const expresshbs = require('express-handlebars');
 const request = require('request');
 const fs = require('fs');
 const Album = require('./models/Album');
+const Track = require('./models/Track');
 const config = fs.existsSync('config.js') ? require('./config') : process.env;
 
 const sortingUtils = require('./utils/sortingUtils');
@@ -13,6 +14,10 @@ const spotifyConstants = require('./constants/spotifyConstants');
 const clientId = config.clientId; // Your client id
 const clientSecret = config.clientSecret; // Your secret
 let accessToken;
+const db = {
+	searchTerm: '',
+	lastAlbum: ''
+};
 
 const app = express();
 
@@ -119,6 +124,7 @@ app.get('/refresh_token', function (req, res) {
  */
 app.get('/search', (req, res) => {
 	const album = req.query.album;
+	db.searchTerm = album;
 	if (!accessToken) getSpotifyAccessToken();
 	const options = {
 		url: spotifyConstants.apiEndpoints.albumSearchByAlbum + album,
@@ -153,14 +159,29 @@ app.get('/album/:id', (req, res) => {
 	};
 	request.get(options, function (error, response, body) {
 		const album = new Album(body);
-		res.render('album-details', { album: album });
+		db.lastAlbum = album;
+		res.render('album-details', { album: album, searchUrl: '/search?album=' + db.searchTerm });
 	});
 
 
 });
 
-app.post('/generate', () => {
-	// get tracks in the body
+app.get('/generate', () => {
+	let tracks = db.lastAlbum.tracks;
+	if (tracks != null && tracks.length > 0) {
+		const totalTracks = db.lastAlbum.totalTracks;
+		const logTracks = Math.log2(totalTracks);
+		const isMultipleOfTwo = Number.isInteger(logTracks);
+		const numOfPreliminaryRounds = totalTracks - Math.pow(2, isMultipleOfTwo ? logTracks : Math.floor(logTracks));
+		const rangeAdvances = totalTracks - (2 * numOfPreliminaryRounds);
+		
+		sortingUtils.sortTracksByPopularity(tracks, accessToken).then(result => {
+			tracks = result.map(track => new Track(track));
+			const tracksToAdvance = tracks.splice(0, rangeAdvances);
+			console.log(tracksToAdvance);
+			console.log(tracks);
+		});
+	}
 });
 
 /**

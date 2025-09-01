@@ -1,0 +1,13 @@
+<div class="album-container--subtitle">
+	<h3>Pick an album to turn into a bracket</h2>
+</div>
+<div class="album-container--wrapper">
+	{{#each albums}}
+	<a href="/album/{{id}}">
+		<div class="album-container" id="{{id}}">
+			<img src={{artwork.url}} />
+			<h4>{{name}} ({{releaseYear}}) <span class="artist">by {{joinArtistNames artists ", "}}</span></h4>
+		</div>
+	</a>
+	{{/each}}
+</div>

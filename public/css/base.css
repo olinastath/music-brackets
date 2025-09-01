@@ -1,5 +1,5 @@
 body {
-	padding: 50px 50px 0;
+	padding: 20px 50px 50px;
 	font: 17px 'Lato', Helvetica, Arial, sans-serif;
 	background-color: #1e252c;
 	color: #def;
@@ -45,8 +45,8 @@ h2, h3 {
 
 .album-container--wrapper {
   display: grid;
-  grid: 500px / auto auto auto auto;
-  grid-gap: 50px;
+  grid: auto-flow / 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
 }
 
 .album-container {
@@ -58,6 +58,7 @@ h2, h3 {
 
 .album-container > img {
   width: 100%;
+  aspect-ratio: 1 / 1;
 }
 
 .album-details-container--wrapper {
@@ -71,6 +72,16 @@ h2, h3 {
   display: flex;
   flex-direction: row;
 }
+
+.album-details--title {
+  margin-bottom: 10px;
+}
+
+.album-details--subtitle {
+  margin-top: 0;
+}
+
+
 .album-details-column {
   display: block;
   width: 50%;
@@ -85,6 +96,7 @@ h2, h3 {
 
   ol {
     text-align: left;
+    margin-top: 0;
   }
 }
 
@@ -96,4 +108,13 @@ h2, h3 {
 
 .body-container {
   text-align: center;
+}
+
+.artist {
+  font-weight: normal;
+}
+
+.back-to-results {
+  position: absolute;
+  top: 50px;
 }

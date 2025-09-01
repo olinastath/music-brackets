@@ -18,6 +18,23 @@ function getArtistDetails(album, accessToken) {
 	});
 }
 
+function getTracksDetails(tracks, accessToken) {
+	const trackIds = tracks.map(track => track.id).join(',');
+	const options = {
+		url: spotifyConstants.apiEndpoints.trackDetails + trackIds,
+		headers: {
+			'Authorization': 'Bearer ' + accessToken
+		},
+		json: true
+	};
+	return new Promise(resolve => {
+		request.get(options, function(error, response, body) {
+			resolve(body.tracks);
+		});
+	});
+}
+
 module.exports = {
-	getArtistDetails
+	getArtistDetails,
+	getTracksDetails
 };

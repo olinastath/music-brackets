@@ -1,4 +1,3 @@
-// const spotifyConstants = require('./constants/spotifyConstants');
 const restUtils = require('./restUtils');
 // const Artist = require('../models/Artist');
 
@@ -10,14 +9,19 @@ function sortAlbumsByArtistPopularity(albums, accessToken) {
 	return Promise.all(promises).then(results => results.sort((a, b) => b.mainArtist.popularity - a.mainArtist.popularity));
 }
 
+function sortTracksByPopularity(tracks, accessToken) {
+	return restUtils.getTracksDetails(tracks, accessToken).then(results => results.sort((a, b) => b.popularity - a.popularity));
+}
 
 /**
  * Utility for sorting Spotify results
  * @module sortingUtils
  * @type {{
  *     sortAlbumsByArtistPopularity: function,
+ *     sortTracksByPopularity: function,
  * }}
  */
 module.exports = {
-	sortAlbumsByArtistPopularity
+	sortAlbumsByArtistPopularity,
+	sortTracksByPopularity
 };

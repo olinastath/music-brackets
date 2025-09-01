@@ -1,7 +1,8 @@
+<div class="back-to-results"><a href="{{searchUrl}}"><i class="fa fa-arrow-left"></i> Back to results</a></div>
 <div class="album-details-container--wrapper">
 	<div class="album-details--title-container">
-		<h2>{{album.name}}</h1>
-		<h3>{{joinArtistNames album.artists ", "}} · {{album.releaseYear}} · {{album.totalTracks}} tracks</h2>
+		<h2 class="album-details--title">{{album.name}}</h1>
+		<h3 class="album-details--subtitle">{{joinArtistNames album.artists ", "}} · {{album.releaseYear}} · {{album.totalTracks}} tracks</h2>
 	</div>
 	<div class="album-details--content-container">
 		<div class="album-details-column" id="album-details-column--artwork">
@@ -15,5 +16,7 @@
 			</ol>
 		</div>
 	</div>
-	<button class="generate-bracket-btn">Generate bracket</button>
+	<form action="/generate">
+  		<button type="submit" class="generate-bracket-btn">Generate bracket</button>
+	</form>
 </div>
